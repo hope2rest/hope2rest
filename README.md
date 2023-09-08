@@ -19,6 +19,8 @@ Skills: Development Planning, Front-end Development
 ### ADDITIONAL INFORMATION
 - 🔭 I’m currently working on I am currently running AI-related education and services 
 - 🌱 I’m currently learning Fluter
+- 👍 I'm interested in web-based AI services,  
+also interested in detection and tracking fields of language generation models
 - 📫 How to reach me: hope22rest@gmial.com 
 
 
