@@ -3,6 +3,18 @@
 ### Hi 👋 I'm kangsan, I am currently running AI-related education and services
 #### I want to become a developer who is good at communicating and planning
 ---
+### Experience
+- **ModuLabs (모두의연구소)** · Full-time <br>
+December 2021 - Present (1 year 10 months) <br>
+Location: Gangnam-gu, Seoul <br>
+My primary responsibilities are AI education and operations, along with content QA (Quality Assurance)
+Skills: Python, Machine Learning, TensorFlow, PyTorch, Education
+
+- **Freelancer**
+December 2020 - June 2021 (7 months) <br>
+Location: Seoul · Hybrid Work (Combination of On-site & Remote) <br>
+Assisted in front-end planning and development utilizing HTML, CSS, Vue.js, and React.js. <br>
+Skills: Development Planning, Front-end Development
 
 ### ADDITIONAL INFORMATION
 - 🔭 I’m currently working on I am currently running AI-related education and services 
@@ -31,7 +43,7 @@
 <a href="https://www.facebook.com/https://www.facebook.com/profile.php?id=61550647994661" target="_blank">
 <img src=https://img.shields.io/badge/facebook-%232E87FB.svg?&style=for-the-badge&logo=facebook&logoColor=white alt=facebook style="margin-bottom: 5px;" /></a>  
 
-</div>
+</div><br><br>
 <div align=center>
 	
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/hope2rest)](https://hits.seeyoufarm.com) 
