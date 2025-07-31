@@ -47,7 +47,6 @@ also interested in detection and tracking fields of language generation models
 
 </div><br><br>
 <div align=center>
-	
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/hope2rest)](https://hits.seeyoufarm.com) 
+
 	
 </div>
