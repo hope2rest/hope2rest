@@ -1,12 +1,11 @@
 <p align="center">
-  <a href="https://hope2rest.github.io/hope2rest/game/">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/dog-run-dark.svg">
-    <img src="./assets/dog-run-light.svg" width="100%" alt="강아지가 소화전과 뼈다귀를 뛰어넘으며 달리는 미니 게임">
-  </picture>
+  <a href="https://hope2rest.github.io/hope2rest/game/space/">
+    <img src="./assets/space-fighter.svg" width="100%" alt="은하 전투기: 전투기가 적기를 레이저로 맞히는 미니 게임">
   </a>
   <br>
-  <a href="https://hope2rest.github.io/hope2rest/game/">▶ 강아지 달리기 직접 해 보기</a>
+  <a href="https://hope2rest.github.io/hope2rest/game/space/">▶ 은하 전투기 직접 해 보기</a>
+  &nbsp;·&nbsp;
+  <a href="https://hope2rest.github.io/hope2rest/game/">이전 버전: 강아지 달리기</a>
 </p>
 
 ## AI(AX) 교육 사업 발굴/기획/제안/운영, AI 커리큘럼 개발
