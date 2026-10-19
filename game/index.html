@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>강아지 달리기</title>
+<style>
+  :root { --ink: #535353; --faint: #B5B5B5; --bg: #FFFFFF; }
+  @media (prefers-color-scheme: dark) { :root { --ink: #C9D1D9; --faint: #3D444D; --bg: #0D1117; } }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); }
+  body { display: grid; place-items: center; font-family: Consolas, 'Courier New', monospace; }
+  .wrap { width: min(960px, calc(100vw - 32px)); }
+  canvas { width: 100%; height: auto; display: block; image-rendering: pixelated; touch-action: manipulation; cursor: pointer; }
+  p { margin: 14px 0 0; font-size: 13px; text-align: center; color: var(--faint); }
+  a { color: inherit; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <canvas id="c" width="960" height="220" aria-label="강아지 달리기 게임. 스페이스, 위쪽 화살표, 화면 누르기로 점프"></canvas>
+  <p>스페이스 · ↑ · 화면 누르기 = 점프 &nbsp;|&nbsp; <a href="https://github.com/hope2rest">github.com/hope2rest</a></p>
+</div>
+<script>
+// README 의 자동 재생 그림(assets/dog-run-*.svg)과 같은 도트
+const PX = 3, W = 960, H = 220, GROUND = 186, DOG_X = 70;
+const DOG = [
+  '..................XX....', '.................XXX....', '................XXXXXXX.', '................XXoXXXXX',
+  '................XXXXXXXX', '.X..............XXXXXXX.', '.XX.............XXXXX...', '..XX...........XXXXX....',
+  '...XXXXXXXXXXXXXXXXXX...', '...XXXXXXXXXXXXXXXXXX...', '...XXXXXXXXXXXXXXXXXX...', '....XXXXXXXXXXXXXXXX....',
+];
+const LEGS = [
+  ['....XX..XX.....XX..XX...', '....XX...XX....XX...XX..', '...XX.....XX..XX.....X..', '...XX.....XX..XX........'],
+  ['.....XX.XX......XX.XX...', '......XXX.......XXXX....', '......XX........XX......', '.....XX........XX.......'],
+];
+const HYDRANT = ['...XXXX...', '..XXXXXX..', '.XXXXXXXX.', '..XXXXXX..', 'XXXXXXXXXX', 'XXXXXXXXXX',
+  '..XXXXXX..', '..XXXXXX..', '..XXXXXX..', '..XXXXXX..', '.XXXXXXXX.', 'XXXXXXXXXX'];
+const BONES = ['XX......XX......', 'XXXXXXXXXX..XX..', 'XX......XXXXXXXX', '..XX....XX..XX..', '.XXXXXXXXXXXXX..', '..XX........XX..'];
+const KINDS = [HYDRANT, BONES];
+
+const cv = document.getElementById('c'), g = cv.getContext('2d');
+const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const draw = (grid, x, y, ch = 'X') => grid.forEach((row, r) => [...row].forEach((c, k) => c === ch && g.fillRect(x + k * PX, y + r * PX, PX, PX)));
+
+const DOG_H = (DOG.length + 4) * PX, DOG_W = DOG[0].length * PX;
+let state, hi = 0;
+try { hi = Number(localStorage.getItem('dog-hi')) || 0; } catch {}
+
+function reset() {
+  state = { y: 0, vy: 0, speed: 6, obs: [], next: 60, score: 0, t: 0, over: false, started: false, ground: 0 };
+}
+function jump() {
+  if (state.over) { reset(); state.started = true; return; }
+  state.started = true;
+  if (state.y === 0) state.vy = -12.5;
+}
+addEventListener('keydown', (e) => { if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); jump(); } });
+cv.addEventListener('pointerdown', jump);
+
+function step() {
+  const s = state;
+  if (s.started && !s.over) {
+    s.t++;
+    s.speed = Math.min(14, 6 + s.t / 900);
+    s.score += s.speed / 60;
+    s.vy += 0.75; s.y = Math.min(0, s.y + s.vy); if (s.y === 0) s.vy = 0;
+    s.ground = (s.ground + s.speed) % 200;
+    if (--s.next <= 0) {
+      const grid = KINDS[Math.random() < 0.65 ? 0 : 1];
+      s.obs.push({ grid, x: W });
+      s.next = 55 + Math.random() * 70 - s.speed * 2;
+    }
+    s.obs.forEach((o) => (o.x -= s.speed));
+    s.obs = s.obs.filter((o) => o.x > -60);
+    // 부딪힘: 몸통 상자끼리(꼬리 · 귀 끝은 봐 준다)
+    const dl = DOG_X + 9, dr = DOG_X + DOG_W - 6, db = GROUND + s.y, dt = db - DOG_H + 12;
+    for (const o of s.obs) {
+      const ow = o.grid[0].length * PX, oh = o.grid.length * PX;
+      if (o.x + 3 < dr && o.x + ow - 3 > dl && db > GROUND - oh + 4 && dt < GROUND) {
+        s.over = true;
+        if (s.score > hi) { hi = Math.floor(s.score); try { localStorage.setItem('dog-hi', String(hi)); } catch {} }
+      }
+    }
+  }
+  render();
+  requestAnimationFrame(step);
+}
+
+function render() {
+  const s = state, ink = css('--ink'), faint = css('--faint');
+  g.clearRect(0, 0, W, H);
+  g.font = '13px Consolas, "Courier New", monospace';
+  g.textAlign = 'right';
+  g.fillStyle = faint; g.fillText(`HI ${String(hi).padStart(5, '0')}`, W - 100, 34);
+  g.fillStyle = ink; g.fillText(String(Math.floor(s.score)).padStart(5, '0'), W - 40, 34);
+  g.fillRect(0, GROUND, W, 2);
+  g.fillStyle = faint;
+  for (let x = -s.ground; x < W; x += 37) g.fillRect(x, GROUND + 8 + ((Math.round(x + s.ground) * 7) % 9), 3, 2);
+  g.fillStyle = ink;
+  s.obs.forEach((o) => draw(o.grid, Math.round(o.x), GROUND - o.grid.length * PX + 2));
+  const y = Math.round(GROUND - DOG_H + 2 + s.y);
+  draw(DOG, DOG_X, y);
+  g.fillStyle = css('--bg'); draw(DOG, DOG_X, y, 'o');
+  g.fillStyle = ink;
+  const leg = s.over || s.y < 0 || !s.started ? 0 : Math.floor(s.t / 7) % 2;
+  draw(LEGS[leg], DOG_X, y + DOG.length * PX);
+  g.textAlign = 'center';
+  if (!s.started) g.fillText('스페이스 또는 화면을 눌러 시작', W / 2, 92);
+  if (s.over) { g.fillText('G A M E   O V E R', W / 2, 80); g.fillStyle = faint; g.fillText('다시 하려면 누르기', W / 2, 104); }
+}
+
+reset();
+requestAnimationFrame(step);
+</script>
+</body>
+</html>
